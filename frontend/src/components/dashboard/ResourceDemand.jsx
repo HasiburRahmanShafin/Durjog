@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import API from '../../services/api';
-import { Package, AlertCircle, CheckCircle } from 'lucide-react';
+import { Package } from 'lucide-react';
 
 const ResourceDemand = () => {
   const [requests, setRequests] = useState([]);

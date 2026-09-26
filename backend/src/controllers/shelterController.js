@@ -36,12 +36,19 @@ exports.updateShelter = async (req, res) => {
 exports.findNearestShelters = async (req, res) => {
   try {
     const { lng, lat, maxDistance = 50000 } = req.query; // max 50km
+    const parsedLng = parseFloat(lng);
+    const parsedLat = parseFloat(lat);
+
+    if (isNaN(parsedLng) || isNaN(parsedLat)) {
+      return res.status(400).json({ msg: 'Valid longitude and latitude are required' });
+    }
+
     const shelters = await Shelter.aggregate([
       {
         $geoNear: {
-          near: { type: 'Point', coordinates: [parseFloat(lng), parseFloat(lat)] },
+          near: { type: 'Point', coordinates: [parsedLng, parsedLat] },
           distanceField: 'distance',
-          maxDistance: parseInt(maxDistance),
+          maxDistance: parseInt(maxDistance, 10) || 50000,
           spherical: true
         }
       },

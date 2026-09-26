@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
         try {
           const res = await API.get('/auth/profile');
           setUser(res.data);
-          ensureSocketConnection(res.data.id);
+          ensureSocketConnection(res.data._id || res.data.id);
         } catch (err) {
           console.error('Failed to fetch user', err);
           localStorage.removeItem('accessToken');

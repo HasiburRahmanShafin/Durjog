@@ -1,0 +1,34 @@
+{
+  "name": "durjog",
+  "version": "1.0.0",
+  "description": "DURJOG - Real-time Disaster Monitoring & Early Warning System for Bangladesh",
+  "scripts": {
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "seed": "cd backend && node scripts/seedLocations.js"
+  },
+  "keywords": [
+    "disaster-management",
+    "early-warning",
+    "bangladesh",
+    "flood-monitoring",
+    "earthquake-tracker",
+    "react",
+    "node",
+    "express",
+    "mongodb",
+    "socket-io"
+  ],
+  "author": "Durjog Team",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import API from '../../services/api';
-import { Home, MapPin, Phone } from 'lucide-react';
+import { Home } from 'lucide-react';
 
 const AdminShelters = () => {
   const [shelters, setShelters] = useState([]);
@@ -38,7 +38,7 @@ const AdminShelters = () => {
       await API.post('/community/shelters', {
         ...formData,
         location: { type: 'Point', coordinates: [parseFloat(formData.lng), parseFloat(formData.lat)] },
-        facilities: formData.facilities.split(',').map(f => f.trim())
+        facilities: formData.facilities ? formData.facilities.split(',').map(f => f.trim()).filter(Boolean) : []
       });
       setMessage('Shelter added successfully');
       setFormData({ name: '', type: 'both', lat: '', lng: '', upazila: '', capacity: '', contact: '', status: 'open', facilities: '' });

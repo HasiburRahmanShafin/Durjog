@@ -4,7 +4,7 @@ const RiverStation = require('../models/RiverStation');
 const { fetchRecentEarthquakes } = require('./usgsService');
 const { sendAlertEmail } = require('./emailService');
 const { getIo } = require('./ioService');
-const { updateAllRiskScores } = require('../controllers/locationController');
+const { updateAllRiskScores } = require('./riskScoreService');
 const Location = require('../models/Location');
 
 function getFloodLevel(current, danger) {

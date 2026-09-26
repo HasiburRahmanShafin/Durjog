@@ -160,7 +160,7 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-        <DisasterHistory />
+        <DisasterHistory compact={true} />
       </div>
 
       {/* Sprint 4 Modules */}

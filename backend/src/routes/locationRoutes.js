@@ -10,9 +10,9 @@ const {
 } = require('../controllers/locationController');
 
 router.get('/', verifyToken, getLocations);
+router.get('/search', verifyToken, searchLocations);
 router.get('/risk-summary', verifyToken, getRiskSummary);
 router.get('/:id', verifyToken, getLocationById);
 router.put('/:id/risk', verifyToken, computeRisk);
-router.get('/search', verifyToken, searchLocations);
 
 module.exports = router;

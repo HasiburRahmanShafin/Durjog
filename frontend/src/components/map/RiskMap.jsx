@@ -30,15 +30,16 @@ const RiskMap = () => {
   const [floodOverlayData, setFloodOverlayData] = useState(null);
   const [seismicOverlayData, setSeismicOverlayData] = useState(null);
 
+  const API_BASE = process.env.REACT_APP_API_URL 
+    ? process.env.REACT_APP_API_URL.replace(/\/api\/?$/, '') 
+    : 'http://localhost:5000';
+
   // Fetch GeoJSON boundaries and district data
   useEffect(() => {
     const fetchGeoJson = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/geojson/bangladesh.geojson');
+        const res = await fetch(`${API_BASE}/api/geojson/bangladesh.geojson`);
         const data = await res.json();
-        if (data.features && data.features.length > 0) {
-          console.log('Sample GeoJSON properties:', data.features[0].properties);
-        }
         setGeoJsonData(data);
       } catch (err) {
         console.error('Failed to load GeoJSON', err);
@@ -68,37 +69,35 @@ const RiskMap = () => {
 
     fetchGeoJson();
     fetchDistricts();
-  }, []);
+  }, [API_BASE]);
 
   // Fetch flood overlay when toggled on
   useEffect(() => {
-  if (showFloodOverlay) {
-    fetch('/api/geojson/flood-prone-areas.geojson')
-      .then(res => res.json())
-      .then(data => {
-        console.log('Flood overlay loaded', data);
-        setFloodOverlayData(data);
-      })
-      .catch(err => console.error('Flood overlay error', err));
-  } else {
-    setFloodOverlayData(null);
-  }
-}, [showFloodOverlay]);
+    if (showFloodOverlay) {
+      fetch(`${API_BASE}/api/geojson/flood-prone-areas.geojson`)
+        .then(res => res.json())
+        .then(data => {
+          setFloodOverlayData(data);
+        })
+        .catch(err => console.error('Flood overlay error', err));
+    } else {
+      setFloodOverlayData(null);
+    }
+  }, [showFloodOverlay, API_BASE]);
 
   // Fetch seismic overlay when toggled on
   useEffect(() => {
-  if (showSeismicOverlay) {
-    fetch('/api/geojson/seismic-zones.geojson')
-      .then(res => res.json())
-      .then(data => {
-        console.log('Seismic overlay loaded', data);
-        setSeismicOverlayData(data);
-      })
-      .catch(err => console.error('Seismic overlay error', err));
-  } else {
-    setSeismicOverlayData(null);
-  }
-}, [showSeismicOverlay]);
+    if (showSeismicOverlay) {
+      fetch(`${API_BASE}/api/geojson/seismic-zones.geojson`)
+        .then(res => res.json())
+        .then(data => {
+          setSeismicOverlayData(data);
+        })
+        .catch(err => console.error('Seismic overlay error', err));
+    } else {
+      setSeismicOverlayData(null);
+    }
+  }, [showSeismicOverlay, API_BASE]);
 
   // Vibrant colors
   const getColorByRisk = (risk) => {

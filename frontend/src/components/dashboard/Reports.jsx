@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import API from '../../services/api';
-import { FileText, MapPin, Upload, Camera, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { FileText, MapPin, CheckCircle, XCircle, Clock } from 'lucide-react';
 
 const Reports = () => {
   const [myReports, setMyReports] = useState([]);

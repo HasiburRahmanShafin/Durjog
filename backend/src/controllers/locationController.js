@@ -48,7 +48,7 @@ exports.computeRisk = async (req, res) => {
 // Update all risk scores (cron job)
 exports.updateAllRiskScores = updateAllRiskScores;
 
-// Keep the old risk summary endpoint unchanged
+// Get risk summary (top 5 risky districts)
 exports.getRiskSummary = async (req, res) => {
   try {
     const topRisky = await Location.find({ type: 'district' })
@@ -61,34 +61,18 @@ exports.getRiskSummary = async (req, res) => {
   }
 };
 
-// Get risk summary (top risky districts)
-exports.getRiskSummary = async (req, res) => {
-  try {
-    const topRisky = await Location.find({ type: 'district' })
-      .sort({ riskScore: -1 })
-      .limit(5)
-      .select('name riskScore');
-    res.json(topRisky);
-  } catch (err) {
-    res.status(500).json({ msg: err.message });
-  }
-};
-
-// SEARCH ENDPOINT – for upazila autocomplete
+// SEARCH ENDPOINT – for upazila / district autocomplete
 exports.searchLocations = async (req, res) => {
   try {
     const { q, type } = req.query;
-    console.log(`[search] query: "${q}", type: "${type}"`); // debug
-    if (!q || q.length < 2) {
+    if (!q || q.trim().length < 2) {
       return res.json([]);
     }
-    const filter = { name: { $regex: q, $options: 'i' } };
+    const filter = { name: { $regex: q.trim(), $options: 'i' } };
     if (type) filter.type = type;
     const locations = await Location.find(filter).limit(20);
-    console.log(`[search] found ${locations.length} results`); // debug
     res.json(locations);
   } catch (err) {
-    console.error('[search] ERROR:', err);
-    res.status(500).json({ msg: err.message, stack: err.stack });
+    res.status(500).json({ msg: err.message });
   }
 };

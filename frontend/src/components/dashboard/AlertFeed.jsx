@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getActiveAlerts } from '../../services/alertService';
 import { getSocket } from '../../services/socket';
 import { useAuth } from '../../context/AuthContext';
@@ -10,7 +10,7 @@ const AlertFeed = () => {
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('severity'); // severity, date
 
-  const fetchAlerts = async () => {
+  const fetchAlerts = useCallback(async () => {
     try {
       const res = await getActiveAlerts();
       // Filter alerts: only show those whose upazila is in user's preferredUpazilas
@@ -25,20 +25,21 @@ const AlertFeed = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchAlerts();
     const socket = getSocket();
+    const onAlert = () => fetchAlerts();
     if (socket) {
-      socket.on('newAlert', () => fetchAlerts()); // refresh instantly
+      socket.on('newAlert', onAlert);
     }
     const interval = setInterval(fetchAlerts, 30000);
     return () => {
       clearInterval(interval);
-      if (socket) socket.off('newAlert');
+      if (socket) socket.off('newAlert', onAlert);
     };
-  }, [user]);
+  }, [fetchAlerts]);
 
   const sortedAlerts = [...alerts];
   if (sortBy === 'severity') {

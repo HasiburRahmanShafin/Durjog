@@ -37,9 +37,17 @@ const Shelters = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-2"><Shield className="w-8 h-8" /> Emergency Shelters</h1>
       
-      <button onClick={findNearest} className="mb-6 bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
-        <Navigation className="w-4 h-4" /> Find Nearest Open Shelter
-      </button>
+      <div className="flex items-center gap-4 mb-6">
+        <button onClick={findNearest} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
+          <Navigation className="w-4 h-4" /> Find Nearest Open Shelter
+        </button>
+        {userLocation && (
+          <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5 text-blue-600" />
+            Your GPS: {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
+          </span>
+        )}
+      </div>
 
       {loading && <p>Searching nearby shelters...</p>}
       {nearest.length > 0 && (

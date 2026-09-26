@@ -40,10 +40,10 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center space-x-2">
               <img 
-    src="dlogo2.png" 
-    alt="DURJOG Logo" 
-    className="h-8 w-auto" 
-  />
+                src="/dlogo2.png" 
+                alt="DURJOG Logo" 
+                className="h-8 w-auto" 
+              />
         
             <span className="font-bold text-xl text-gray-900">DURJOG</span>
           </Link>

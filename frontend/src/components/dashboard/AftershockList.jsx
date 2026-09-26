@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import API from '../../services/api';
 import { Plus } from 'lucide-react';
 
@@ -8,18 +8,18 @@ const AftershockList = ({ eventId }) => {
   const [newMagnitude, setNewMagnitude] = useState(4.0);
   const [newDepth, setNewDepth] = useState(30);
 
-  const fetchAftershocks = async () => {
+  const fetchAftershocks = useCallback(async () => {
     try {
       const res = await API.get(`/disaster/earthquakes/aftershocks/${eventId}`);
       setAftershocks(res.data);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [eventId]);
 
   useEffect(() => {
     fetchAftershocks();
-  }, [eventId]);
+  }, [fetchAftershocks]);
 
   const addAftershock = async () => {
     try {

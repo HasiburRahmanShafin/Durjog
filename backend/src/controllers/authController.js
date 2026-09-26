@@ -171,9 +171,10 @@ exports.updateProfile = async (req, res) => {
   const { name, contact, homeLocation, preferredUpazilas, alertPreferences } = req.body;
   try {
     const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ msg: 'User not found' });
     const oldUpazilas = user.preferredUpazilas || [];
 
-    if (name) user.name = name;
+    if (name !== undefined) user.name = name;
     if (contact !== undefined) user.contact = contact;
     if (homeLocation !== undefined) user.homeLocation = homeLocation;
     let newUpazilas = preferredUpazilas;
@@ -186,17 +187,20 @@ exports.updateProfile = async (req, res) => {
     await user.save();
 
     // For each newly added upazila, send existing active alerts
-    const added = newUpazilas.filter(upa => !oldUpazilas.includes(upa));
-    if (added.length > 0) {
-      const { sendExistingAlertsForUpazila } = require('../services/alertService');
-      for (const upa of added) {
-        await sendExistingAlertsForUpazila(user, upa);
+    if (Array.isArray(newUpazilas)) {
+      const added = newUpazilas.filter(upa => !oldUpazilas.includes(upa));
+      if (added.length > 0) {
+        const { sendExistingAlertsForUpazila } = require('../services/alertService');
+        for (const upa of added) {
+          await sendExistingAlertsForUpazila(user, upa);
+        }
       }
     }
 
-    res.json({ msg: 'Profile updated' });
+    const sanitizedUser = await User.findById(req.user.id).select('-password -refreshToken');
+    res.json({ msg: 'Profile updated', user: sanitizedUser });
   } catch (err) {
-    console.error(err.message);
+    console.error('Update profile error:', err.message);
     res.status(500).json({ msg: err.message });
   }
 };

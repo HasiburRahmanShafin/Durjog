@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getAlertHistory } from '../../services/alertService';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -8,7 +8,7 @@ const AlertHistory = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     try {
       const res = await getAlertHistory(page);
       setAlerts(res.data.alerts);
@@ -18,11 +18,11 @@ const AlertHistory = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
 
   useEffect(() => {
     fetchHistory();
-  }, [page]);
+  }, [fetchHistory]);
 
   if (loading) return <div className="p-8 text-center">Loading history...</div>;
 
